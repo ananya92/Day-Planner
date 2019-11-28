@@ -24,7 +24,7 @@ textarea{
   border-bottom: 10px solid black;
 }
 
-.description{
+.border-top{
   border-top: 2px solid grey;
 }
 
@@ -71,4 +71,8 @@ textarea{
 
 .saveBtn:hover {
   background-color: rgb(161, 238, 255);
+}
+
+button {
+  height: 100%;
 }
