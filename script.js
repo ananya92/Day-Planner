@@ -1,3 +1,6 @@
+// Array storing all tags with class description
+var descriptionTags = $(".description");
+
 window.onload = function() {  
 
     // Set the current day using moment.js when the window loads
@@ -9,12 +12,10 @@ window.onload = function() {
 }
 
 // Setting interval to check and update the passed time, current time and remaining time every 5 minutes
-var interval = window.setInterval(updatePassedTime, 300000);        
+var interval = setInterval(updatePassedTime, 300000);        
 
 // Function to check the time of all the time blocks and update the background color of their textarea to indicate if that time block has already passed, is currently active or will be in the future.
 function updatePassedTime() {
-    // Array storing all tags with class description
-    var descriptionTags = $(".description");
 
     // Moment object storing the current time
     var currentTime = moment();
@@ -41,3 +42,34 @@ function updatePassedTime() {
         }
     }
 }
+
+$(".saveBtn").on("click", function() {
+    // Variable storing the time attribute value corresponding to the clicked save button
+    var time = $(this).attr("data-time");
+
+    // Variable storing the planned tasks array along with their time slots read from local storage 
+    var plannedTaskList = JSON.parse(localStorage.getItem("plannedTasks"));
+
+    for(var i=0; i< descriptionTags.length; i++) {
+        if(descriptionTags[i].getAttribute("data-time") === time) {
+            // Object storing the planned task along with its time
+            var task = {
+                "time" : time,
+                "task": descriptionTags[i].value
+            };
+            if(plannedTaskList === null) {
+                plannedTaskList = [];                 //If the task list is undefined, then create empty array
+            }                                      
+            else {
+                for(var index=0; index<plannedTaskList.length; index++) {
+                    if(plannedTaskList[index].time === time) {
+                        plannedTaskList.splice(index,1);        //Remove previous task if task at that time already exists in local storage
+                        break;
+                    }
+                }
+            }
+            plannedTaskList.push(task);                     //Push the saved task to the local storage object
+        }
+    }
+    localStorage.setItem("plannedTasks", JSON.stringify(plannedTaskList));  //Write the planned tasks to local storage
+});
