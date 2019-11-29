@@ -83,4 +83,6 @@ button {
   padding-top: 40px;
   padding-bottom: 40px;
   border-bottom: 5px solid black;
+  color: white;
+  background-image: url("../images/circle-blues.png");
 }
