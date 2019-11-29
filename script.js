@@ -9,6 +9,9 @@ window.onload = function() {
 
     //calling updatePassedTime() to check and update the background color of all the time blocks
     updatePassedTime();
+
+    //calling fillTasks() to read the planned tasks from local storage and display in the time blocks
+    fillTasks();
 }
 
 // Setting interval to check and update the passed time, current time and remaining time every 5 minutes
@@ -73,3 +76,20 @@ $(".saveBtn").on("click", function() {
     }
     localStorage.setItem("plannedTasks", JSON.stringify(plannedTaskList));  //Write the planned tasks to local storage
 });
+
+function fillTasks() {
+    // Variable storing the planned tasks array along with their time slots read from local storage 
+    var plannedTaskList = JSON.parse(localStorage.getItem("plannedTasks"));
+
+    for(var i=0; i< descriptionTags.length; i++) {  //iterating the list of all textarea tags
+        //variable storing the time attribute value corresponding to each textarea
+        var time = descriptionTags[i].getAttribute("data-time");
+
+        for(var index=0; index<plannedTaskList.length; index++) {
+            if(plannedTaskList[index].time === time) {                  
+                descriptionTags[i].value = plannedTaskList[index].task; //read from the planned task stored in local storage and update the task in textarea
+                break;
+            }
+        }
+    }
+}
