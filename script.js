@@ -4,8 +4,8 @@ var descriptionTags = $(".description");
 window.onload = function() {  
 
     // Set the current day using moment.js when the window loads
-    var time = moment().format('dddd') + ", " + moment().format('MMMM') + " " + moment().format('Do');
-    $("#currentDay").text(time);
+    var date = moment().format('dddd') + ", " + moment().format('MMMM') + " " + moment().format('Do');
+    $("#currentDay").text(date);
 
     //calling updatePassedTime() to check and update the background color of all the time blocks
     updatePassedTime();
@@ -50,8 +50,10 @@ $(".saveBtn").on("click", function() {
     // Variable storing the time attribute value corresponding to the clicked save button
     var time = $(this).attr("data-time");
 
-    // Variable storing the planned tasks array along with their time slots read from local storage 
-    var plannedTaskList = JSON.parse(localStorage.getItem("plannedTasks"));
+    // Variable storing the planned tasks read from local storage 
+    var plannerTasks = JSON.parse(localStorage.getItem("plannerTasks"));
+
+    var plannedTaskList = plannerTasks.tasks;
 
     for(var i=0; i< descriptionTags.length; i++) {
         if(descriptionTags[i].getAttribute("data-time") === time) {
@@ -74,12 +76,18 @@ $(".saveBtn").on("click", function() {
             plannedTaskList.push(task);                     //Push the saved task to the local storage object
         }
     }
-    localStorage.setItem("plannedTasks", JSON.stringify(plannedTaskList));  //Write the planned tasks to local storage
+    plannerTasks.tasks = plannedTaskList;
+    localStorage.setItem("plannerTasks", JSON.stringify(plannerTasks));  //Write the planned tasks to local storage
 });
 
 function fillTasks() {
-    // Variable storing the planned tasks array along with their time slots read from local storage 
-    var plannedTaskList = JSON.parse(localStorage.getItem("plannedTasks"));
+
+    //calling checkIfNewDay() to check if it is a new day and empty the planned tasks stored in local storage
+    checkIfNewDay();
+
+    // Variable storing the planned tasks read from local storage 
+    var plannerTasks = JSON.parse(localStorage.getItem("plannerTasks"));
+    var plannedTaskList = plannerTasks.tasks;
 
     for(var i=0; i< descriptionTags.length; i++) {  //iterating the list of all textarea tags
         //variable storing the time attribute value corresponding to each textarea
@@ -90,6 +98,24 @@ function fillTasks() {
                 descriptionTags[i].value = plannedTaskList[index].task; //read from the planned task stored in local storage and update the task in textarea
                 break;
             }
+        }
+    }
+}
+
+function checkIfNewDay() {
+    var planner = {
+        day: $("#currentDay").text(),
+        tasks: []
+    }
+    // Variable storing the planned tasks read from local storage 
+    var plannerTasks = JSON.parse(localStorage.getItem("plannerTasks"));
+
+    if(plannerTasks === null) {
+        localStorage.setItem("plannerTasks", JSON.stringify(planner));  //Write the initial planner object with day and empty task list to local storage
+    }
+    else {                                                             //Planner object in local storage is not empty
+        if(plannerTasks.day !== $("#currentDay").text()) {             //If the local storage is storing tasks from a different day than the current day, then reinitialize with initial planner object with current date and empty task list
+            localStorage.setItem("plannerTasks", JSON.stringify(planner));
         }
     }
 }
