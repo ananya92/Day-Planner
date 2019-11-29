@@ -8,6 +8,9 @@ window.onload = function() {
     updatePassedTime();
 }
 
+// Setting interval to check and update the passed time, current time and remaining time every 5 minutes
+var interval = window.setInterval(updatePassedTime, 300000);        
+
 // Function to check the time of all the time blocks and update the background color of their textarea to indicate if that time block has already passed, is currently active or will be in the future.
 function updatePassedTime() {
     // Array storing all tags with class description
