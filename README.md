@@ -36,3 +36,6 @@ Additionally, each hour is color coded to reflect whether the time slot is in th
 
 https://ananya92.github.io/Day-Planner/
 
+## Application Screenshot
+![Project Snapshot](https://github.com/ananya92/My-Portfolio/blob/master/src/components/projects/img/pr9_1.png)
+
